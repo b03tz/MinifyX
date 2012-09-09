@@ -1,1 +1,16 @@
-1.0: Initial Version
+Changelog for MinifyX
+
+1.1.0 (09.09.2012)
+==============
+- Changed css minifier to Minify_CSS_Compressor from https://code.google.com/p/minify/
+- Added Douglas Crockford's JSMin https://github.com/rgrove/jsmin-php/ 
+- Serious refactor of code
+- Added properties to snippet
+- Removed plugin
+- Improved caching of files
+- Added parameters jsFilename && cssFilename
+
+
+1.0.0
+==============
+- Initial Version
