@@ -91,9 +91,7 @@ class MinifyX {
 	 * @param array $options Script properties
 	 * @return void 
 	 */
-	public function minify($options) {
-		//echo '<pre>';print_r($this->config);echo'</pre>';
-		
+	public function minify() {
 		// Javascript
 		if ($jsOutput = $this->processJs($this->config['jsSources'])) {
 			$this->modx->setPlaceholder('MinifyX.javascript', '<script type="text/javascript" src="'.$this->config['cacheFolderUrl'].$this->config['jsFile'].'?'.time().'"></script>');
