@@ -1,5 +1,9 @@
 Changelog for MinifyX
 
+1.1.1 (10.09.2012)
+==============
+- Removed E_WARNING on line 94 of minifyx.class.php
+
 1.1.0 (09.09.2012)
 ==============
 - Changed css minifier to Minify_CSS_Compressor from https://code.google.com/p/minify/
