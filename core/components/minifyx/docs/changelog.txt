@@ -1,5 +1,9 @@
 Changelog for MinifyX
 
+1.1.2 (11.09.2012)
+==============
+- Improved caching of minified files.
+
 1.1.1 (10.09.2012)
 ==============
 - Removed E_WARNING on line 94 of minifyx.class.php
