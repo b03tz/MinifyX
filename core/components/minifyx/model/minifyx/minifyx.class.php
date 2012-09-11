@@ -67,8 +67,40 @@ class MinifyX {
 			$this->config['cacheFolder'] = str_replace('//','/', MODX_BASE_PATH.$config['cacheFolder']);
 		}
 		
-		$this->config['jsFile'] = $this->config['minifyJs'] ? $this->config['jsFilename'].'.min.js' : $this->config['jsFilename'].'.js';
-		$this->config['cssFile'] = $this->config['minifyCss'] ? $this->config['cssFilename'].'.min.css' : $this->config['cssFilename'].'.css';
+		$this->config['jsExt'] = $this->config['minifyJs'] ? '.min.js' : '.js';
+		$this->config['cssExt'] = $this->config['minifyCss'] ? '.min.css' : '.css';
+		
+		$files = scandir($this->config['cacheFolder'], 1);
+		$jsExt = str_replace('.','\.',$this->config['jsExt']);
+		$cssExt = str_replace('.','\.',$this->config['cssExt']);
+		$jsExpr = '('.$this->config['jsFilename'].'_(\d){10})'.$jsExt;
+		$cssExpr = '('.$this->config['cssFilename'].'_(\d){10})'.$cssExt;
+
+		foreach ($files as $v) {
+			if ($v == '.' || $v == '..') {continue;}
+			
+			if (preg_match("/^$jsExpr$/iu", $v, $matches)) {
+				// delete old js file if exists
+				if (!empty($this->config['jsFile'])) {
+					unlink($this->config['cacheFolder'].$v);
+					continue;
+				}
+				$this->config['jsFile'] = $matches[1];
+			}
+			else if (preg_match("/^$cssExpr$/iu", $v, $matches)) {
+				// delete old css file if exists
+				if (!empty($this->config['cssFile'])) {
+					unlink($this->config['cacheFolder'].$v);
+					continue;
+				}
+				$this->config['cssFile'] = $matches[1];
+			}
+			else {
+				//do nothing, but here we can delete other files in cache dir
+			}
+		}
+		if (empty($this->config['jsFile'])) {$this->config['jsFile'] = $this->config['jsFilename'];}
+		if (empty($this->config['cssFile'])) {$this->config['cssFile'] = $this->config['cssFilename'];}
 	}
 
 	/**
@@ -93,13 +125,13 @@ class MinifyX {
 	 */
 	public function minify() {
 		// Javascript
-		if ($jsOutput = $this->processJs($this->config['jsSources'])) {
-			$this->modx->setPlaceholder('MinifyX.javascript', '<script type="text/javascript" src="'.$this->config['cacheFolderUrl'].$this->config['jsFile'].'?'.time().'"></script>');
+		if ($jsFile = $this->processJs($this->config['jsSources'])) {
+			$this->modx->setPlaceholder('MinifyX.javascript', '<script type="text/javascript" src="'.$this->config['cacheFolderUrl'].$jsFile.'"></script>');
 		}
 		
 		//CSS
-		if ($cssOutput = $this->processCss($this->config['cssSources'])) {
-			$this->modx->setPlaceholder('MinifyX.css', '<link rel="stylesheet" type="text/css" href="'.$this->config['cacheFolderUrl'].$this->config['cssFile'].'?'.time().'" />');
+		if ($cssFile = $this->processCss($this->config['cssSources'])) {
+			$this->modx->setPlaceholder('MinifyX.css', '<link rel="stylesheet" type="text/css" href="'.$this->config['cacheFolderUrl'].$cssFile.'" />');
 		}
 		
 		return;
@@ -113,7 +145,7 @@ class MinifyX {
 	 * @return boolean
 	 */
 	function processJs() {
-		$file = $this->config['cacheFolder'].$this->config['jsFile'];
+		$file = $this->config['cacheFolder'].$this->config['jsFile'].$this->config['jsExt'];
 		$output = '';
 		$maxtime = 0;
 		foreach($this->config['jsSources'] as $source) {
@@ -129,7 +161,7 @@ class MinifyX {
 		if (is_file($file)) {
 			$mintime = filemtime($file);
 			if ($mintime > $maxtime) {
-				return true;
+				return $this->config['jsFile'].$this->config['jsExt'];
 			}
 		}
 		if ($this->config['minifyJs']) {
@@ -141,7 +173,9 @@ class MinifyX {
 			$this->modx->log(modX::LOG_LEVEL_ERROR, '[MinifyX] Could not write JS cache file!');
 			return false;
 		}
-		return true;
+		$newname = $this->config['jsFilename'].'_'.time().$this->config['jsExt'];
+		rename($file, $this->config['cacheFolder'].$newname);
+		return $newname;
 	}
 
 	
@@ -152,7 +186,7 @@ class MinifyX {
 	 * @return boolean
 	 */
 	function processCss() {
-		$file = $this->config['cacheFolder'].$this->config['cssFile'];
+		$file = $this->config['cacheFolder'].$this->config['cssFile'].$this->config['cssExt'];
 		$output = '';
 		$maxtime = 0;
 		foreach($this->config['cssSources'] as $source) {
@@ -168,7 +202,7 @@ class MinifyX {
 		if (is_file($file)) {
 			$mintime = filemtime($file);
 			if ($mintime > $maxtime) {
-				return true;
+				return $this->config['cssFile'].$this->config['cssExt'];
 			}
 		}
 		if ($this->config['minifyCss']) {
@@ -180,7 +214,9 @@ class MinifyX {
 			$this->modx->log(modX::LOG_LEVEL_ERROR,'[MinifyX] Could not write CSS cache file!');
 			return false;
 		}
-		return true;
+		$newname = $this->config['cssFilename'].'_'.time().$this->config['cssExt'];
+		rename($file, $this->config['cacheFolder'].$newname);
+		return $newname;
 	}
 	
 	
