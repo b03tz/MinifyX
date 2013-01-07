@@ -182,7 +182,7 @@ class MinifyX {
 		if(isset($subdir[0],$subdir[1]) && $subdir[1]==''){
 			$file=str_replace($subdir[0],'',$file);
 		}
-		return dirname($file)."/";
+		return str_replace('//','/',dirname($file)."/");
 	}
 	
 	/**
