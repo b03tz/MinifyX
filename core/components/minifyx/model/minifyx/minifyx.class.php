@@ -199,7 +199,7 @@ class MinifyX {
 			$source = str_replace('//', '/', $this->config['basePath'].trim($source));
 			if (is_file($source)) {
 				$content = file_get_contents($source)."\n";
-				$content=preg_replace('#url\((?!\s*[\'"]?(?:https?:)?//)\s*([\'"])?#i', "url($1{$this->getPath($source)}", $content);
+				$content=preg_replace('#url\((?!\s*[\'"]?(?:https?:)?/)\s*([\'"])?#i', "url($1{$this->getPath($source)}", $content);
 				$output .= $content;
 				$filetime = filemtime($source);
 				if ($filetime > $maxtime) {$maxtime = $filetime;}
