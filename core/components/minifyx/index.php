@@ -3,6 +3,7 @@
  * MinifyX
  *
  * Copyright 2011-12 by SCHERP Ontwikkeling <info@scherpontwikkeling.nl>
+ * Fixed by Agel_Nash
  *
  * This file is part of MinifyX.
  *

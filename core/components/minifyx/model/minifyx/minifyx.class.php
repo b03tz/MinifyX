@@ -177,7 +177,13 @@ class MinifyX {
 		rename($file, $this->config['cacheFolder'].$newname);
 		return $newname;
 	}
-
+	private function getPath($file){
+		$subdir=explode($this->modx->getOption('assets_url'),$this->modx->getOption('assets_path'),2);
+		if(isset($subdir[0],$subdir[1]) && $subdir[1]==''){
+			$file=str_replace($subdir[0],'',$file);
+		}
+		return str_replace('//','/',dirname($file)."/");
+	}
 	
 	/**
 	 * Check and create (if need) MinifyX css file 
@@ -192,7 +198,9 @@ class MinifyX {
 		foreach($this->config['cssSources'] as $source) {
 			$source = str_replace('//', '/', $this->config['basePath'].trim($source));
 			if (is_file($source)) {
-				$output .= file_get_contents($source)."\n";
+				$content = file_get_contents($source)."\n";
+				$content=preg_replace('#url\((?!\s*[\'"]?(?:https?:)?/)\s*([\'"])?#i', "url($1{$this->getPath($source)}", $content);
+				$output .= $content;
 				$filetime = filemtime($source);
 				if ($filetime > $maxtime) {$maxtime = $filetime;}
 			} else {
