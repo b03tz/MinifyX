@@ -1,20 +1,31 @@
 <?php
-/**
- * Add snippets to build
- * 
- * @package minifyx
- * @subpackage build
- */
 $snippets = array();
-$properties = include $sources['build'].'properties/properties.minifyx.php';
 
-$snippets[0]= $modx->newObject('modSnippet');
-$snippets[0]->fromArray(array(
-    'id' => 0,
-    'name' => 'MinifyX',
-    'description' => 'MinifyX is a snippet the allows you to combine and minify JS and CSS files',
-    'snippet' => getSnippetContent($sources['source_core'].'/elements/snippets/snippet.minifyx.php'),
-),'',true,true);
-$snippets[0]->setProperties($properties[0]);
+$tmp = array(
+	'MinifyX' => array(
+		'file' => 'minifyx',
+		'description' => 'MinifyX is a snippet the allows you to combine and minify JS and CSS files',
+	),
+);
 
+foreach ($tmp as $k => $v) {
+	/* @avr modSnippet $snippet */
+	$snippet = $modx->newObject('modSnippet');
+	$snippet->fromArray(array(
+		'id' => 0,
+		'name' => $k,
+		'description' => @$v['description'],
+		'snippet' => getSnippetContent($sources['source_core'].'/elements/snippets/snippet.'.$v['file'].'.php'),
+		'static' => BUILD_SNIPPET_STATIC,
+		'source' => 1,
+		'static_file' => 'core/components/'.PKG_NAME_LOWER.'/elements/snippets/snippet.'.$v['file'].'.php',
+	),'',true,true);
+
+	$properties = include $sources['build'].'properties/properties.'.$v['file'].'.php';
+	$snippet->setProperties($properties);
+
+	$snippets[] = $snippet;
+}
+
+unset($tmp, $properties);
 return $snippets;

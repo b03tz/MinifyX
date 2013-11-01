@@ -1,56 +1,45 @@
 <?php
-/**
- * Properties for the MinifyX snippet.
- *
- * @package minifyx
- * @subpackage build
- */
 $properties = array();
 
-$properties[0] = array(
-	array(
-		'name' => 'jsSources',
-		'value' => '',
+$tmp = array(
+	'jsSources' => array(
 		'type' => 'textfield',
-		'desc' => 'Comma separated list to your JS files from the site base URL',
-	),
-	array(
-		'name' => 'cssSources',
 		'value' => '',
+	),
+	'cssSources' => array(
 		'type' => 'textfield',
-		'desc' => 'Comma separated list to your CSS files from the site base URL',
+		'value' => 'name',
 	),
-	array(
-		'name' => 'minifyCss',
-		'value' => false,
+	'minifyCss' => array(
 		'type' => 'combo-boolean',
-		'desc' => 'Whether to minify the CSS or not',
+		'value' => false
 	),
-	array(
-		'name' => 'minifyJs',
-		'value' => false,
+	'minifyJs' => array(
 		'type' => 'combo-boolean',
-		'desc' => 'Whether to minify the JS or not',
+		'value' => false
 	),
-	array(
-		'name' => 'cacheFolder',
+	'cacheFolder' => array(
+		'type' => 'textfield',
 		'value' => '/assets/components/minifyx/cache/',
-		'type' => 'textfield',
-		'desc' => 'The folder to the cache files from the site base URL',
 	),
-	array(
-		'name' => 'jsFilename',
+	'jsFilename' => array(
+		'type' => 'textfield',
 		'value' => 'scripts',
-		'type' => 'textfield',
-		'desc' => 'Base name of destination js file, without extension',
 	),
-	array(
-		'name' => 'cssFilename',
-		'value' => 'styles',
+	'cssFilename' => array(
 		'type' => 'textfield',
-		'desc' => 'Base name of destination css file, without extension',
+		'value' => 'styles',
 	),
 );
 
+foreach ($tmp as $k => $v) {
+	$properties[] = array_merge(
+		array(
+			'name' => $k,
+			'desc' => PKG_NAME_LOWER . '_prop_' . $k,
+			'lexicon' => PKG_NAME_LOWER . ':properties',
+		), $v
+	);
+}
+
 return $properties;
-?>
