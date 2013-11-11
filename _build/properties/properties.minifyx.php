@@ -8,7 +8,7 @@ $tmp = array(
 	),
 	'cssSources' => array(
 		'type' => 'textfield',
-		'value' => 'name',
+		'value' => '',
 	),
 	'minifyCss' => array(
 		'type' => 'combo-boolean',
@@ -29,6 +29,10 @@ $tmp = array(
 	'cssFilename' => array(
 		'type' => 'textfield',
 		'value' => 'styles',
+	),
+	'forceUpdate' => array(
+		'type' => 'combo-boolean',
+		'value' => false,
 	),
 );
 

@@ -1,5 +1,10 @@
 Changelog for MinifyX
 
+1.2.0 (**.11.2013)
+==============
+- Integrated Munee library from http://mun.ee
+- Auto creation of cache dir.
+
 1.1.3 (07.01.2013)
 ==============
 - absolute path in the URL attribute of all compressed files.

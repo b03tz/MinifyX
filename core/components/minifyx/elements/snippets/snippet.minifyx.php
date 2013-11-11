@@ -1,7 +1,13 @@
 <?php
-$minifyX = $modx->getService('minifyx','MinifyX', MODX_CORE_PATH.'components/minifyx/model/minifyx/',$scriptProperties);
-if (!($minifyX instanceof MinifyX)) return '';
+/** @var array $scriptProperties */
+/** @var MinifyX $MinifyX */
+if (!$modx->getService('minifyx','MinifyX', MODX_CORE_PATH.'components/minifyx/model/minifyx/')) {return false;}
 
-$minifyX->minify();
+$MinifyX = new MinifyX($modx, $scriptProperties);
+$MinifyX->minify();
 
-return '';
+// Set old placeholders so MODX can quick replace them
+$modx->setPlaceholders(array(
+	'MinifyX.javascript' => '',
+	'MinifyX.css' => '',
+));
